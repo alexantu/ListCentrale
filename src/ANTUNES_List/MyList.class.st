@@ -27,6 +27,35 @@ node value:aValue.
 	size := size+1.
 ]
 
+{ #category : #setting }
+MyList >> add: anObject at: anIndex [ 
+	|node1 node2 node3 cNode|
+	anIndex=1 ifTrue: [ 
+		 node2:=MyNode new.
+		node2 value:anObject.
+		node2 nextNode:begin.
+		size:=size+1.].
+	
+	(2<=anIndex) ifTrue: [ (anIndex<=size) ifTrue:[
+		cNode:=begin.
+		
+		1 to: (anIndex-1) do: [:i|
+			cNode:=cNode nextNode.].
+		
+		node3:=cNode.
+		node2:=MyNode new.
+		node1:= node3 prevNode.
+		node3 prevNode: node2.
+		node1 nextNode:node2.
+		node2 prevNode: node1.
+		node2 nextNode: node3.
+		node2 value:anObject.
+		
+		size:=size+1.] ].
+	
+^self
+]
+
 { #category : #accessing }
 MyList >> at:aNumber [
 |node|
@@ -65,6 +94,32 @@ super initialize.
 { #category : #accessing }
 MyList >> isEmpty [
 ^(size=0)
+]
+
+{ #category : #setting }
+MyList >> removeAt: anIndex [ 
+	|newBegin cNode node1 node2|
+	anIndex=1 ifTrue: [ 
+		newBegin:=begin nextNode.
+		begin:=newBegin.
+		begin prevNode:nil.
+		size=size-1.].
+	
+	(1<=anIndex) ifTrue: [ (anIndex<=size) ifTrue:[
+		cNode:=begin.
+		
+		1 to: (anIndex-1) do: [:i|
+			cNode:=cNode nextNode.].
+		
+		node1:=cNode prevNode.
+		node2:=cNode nextNode.
+		node1 nextNode: node2.
+		node2 prevNode: node1.
+		
+		
+		size:=size-1.] ].
+	
+^self
 ]
 
 { #category : #accessing }
