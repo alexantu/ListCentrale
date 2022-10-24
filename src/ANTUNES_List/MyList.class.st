@@ -4,10 +4,18 @@ Class {
 	#instVars : [
 		'begin',
 		'end',
-		'size'
+		'size',
+		'aNumber'
 	],
 	#category : #'ANTUNES_List'
 }
+
+{ #category : #accessing }
+MyList >> = anObject [
+(anObject class=self class) ifFalse: [^false].
+1 to: self size do: [ :i| ((self at:i) value=(anObject at:i) value) ifFalse: [ ^false ] ].
+^true
+]
 
 { #category : #accessing }
 MyList >> add:aValue [
@@ -76,6 +84,24 @@ begin:=aNode.
 ]
 
 { #category : #accessing }
+MyList >> collect:aBlock [
+|list|
+
+list:=self class new.
+self do: [ :each| list add: (aBlock value: each) ].
+^list
+]
+
+{ #category : #accessing }
+MyList >> do:aBlock [
+|node|
+node:=begin. 
+[(node=self end)] whileFalse: [:i|
+	node:=node nextNode. 
+	aBlock value: node value].
+]
+
+{ #category : #accessing }
 MyList >> end [
 ^end
 ]
@@ -94,6 +120,15 @@ super initialize.
 { #category : #accessing }
 MyList >> isEmpty [
 ^(size=0)
+]
+
+{ #category : #accessing }
+MyList >> printOn:aStream [
+ aStream nextPut: $[.
+ self do: [ :each| aStream nextPutAll: each value asString;
+	nextPutAll: $,].
+ aStream nextPut: $].
+	
 ]
 
 { #category : #setting }
