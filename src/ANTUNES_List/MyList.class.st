@@ -93,6 +93,12 @@ self do: [ :each| list add: (aBlock value: each) ].
 ]
 
 { #category : #accessing }
+MyList >> detect:aBlock [
+
+self do: [ :each| (aBlock value: each) ifTrue:[^each ]].
+]
+
+{ #category : #accessing }
 MyList >> do:aBlock [
 |node|
 node:=begin. 
@@ -111,10 +117,26 @@ MyList >> end:aNode [
 end:=aNode.
 ]
 
+{ #category : #accessing }
+MyList >> hash [
+|hash|
+hash := self class hash.
+self do: [ :each| hash := hash bitXor: each hash ].
+^hash
+]
+
 { #category : #initialization }
 MyList >> initialize [
 super initialize.
 	size:=0.
+]
+
+{ #category : #accessing }
+MyList >> inject:initialValue into:aBlock [
+|nextValue|
+nextValue:=initialValue.
+self do: [ :each| nextValue:=aBlock value: nextValue value:each ].
+^nextValue
 ]
 
 { #category : #accessing }
@@ -129,6 +151,15 @@ MyList >> printOn:aStream [
 	nextPutAll: $,].
  aStream nextPut: $].
 	
+]
+
+{ #category : #accessing }
+MyList >> reject:aBlock [
+|newList|
+
+newList=self class new.
+self do: [ :each| (aBlock value: each) ifFalse: [ newList add:each ] ].
+^newList
 ]
 
 { #category : #setting }
@@ -155,6 +186,15 @@ MyList >> removeAt: anIndex [
 		size:=size-1.] ].
 	
 ^self
+]
+
+{ #category : #accessing }
+MyList >> select:aBlock [
+|newList|
+
+newList=self class new.
+self do: [ :each| (aBlock value: each) ifTrue: [ newList add:each ] ].
+^newList
 ]
 
 { #category : #accessing }

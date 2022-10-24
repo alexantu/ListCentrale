@@ -80,6 +80,21 @@ self assert: newList equals: expectedList .
 ]
 
 { #category : #testing }
+TestMyList >> testDetect [
+|list |
+list:=MyList new.
+
+list add:-1.
+list add: -5.
+list add: 2.
+list add:3.
+list add:-3.
+list add: 12.
+
+self assert: (list detect: [:each|each >0]) equals:2.
+]
+
+{ #category : #testing }
 TestMyList >> testDo [
 |list sum|
 list:=MyList new.
@@ -92,6 +107,68 @@ sum :=0.
 list do: [ :each| sum:=sum+each ].
 
 self assert: sum equals:6.
+]
+
+{ #category : #testing }
+TestMyList >> testHashEqual [
+|list1 list2|
+list1=MyList new.
+list2=MyList new.
+
+list1 add:1.
+list1 add:3.
+list1 add:4.
+
+list2 add:1.
+list2 add:3.
+list2 add:4.
+
+self assert:  list2 hash equals: list1 hash.
+]
+
+{ #category : #testing }
+TestMyList >> testHashEqualDifferentSizes [
+|list1 list2|
+list1=MyList new.
+list2=MyList new.
+
+list1 add:1.
+list1 add:3.
+list1 add:4.
+list1 add:1.
+
+list2 add:1.
+list2 add:3.
+list2 add:4.
+
+self deny:  list2 hash equals: list1 hash.
+]
+
+{ #category : #testing }
+TestMyList >> testHashNotEqual [
+|list1 list2|
+list1=MyList new.
+list2=MyList new.
+
+list1 add:1.
+list1 add:3.
+list1 add:2.
+
+list2 add:1.
+list2 add:3.
+list2 add:4.
+
+self deny: list2 hash equals: list1 hash.
+]
+
+{ #category : #testing }
+TestMyList >> testInjectInto [
+|list|
+list:=MyList new.
+
+list add: 2; add:3; add:1;add: 12.
+
+self assert: (list inject: 0 into:[:sum :each|sum+each]) equals:18.
 ]
 
 { #category : #testing }
@@ -153,6 +230,27 @@ self assert: list asString equals: '[3,1,2]' .
 ]
 
 { #category : #testing }
+TestMyList >> testReject [
+|list expectedList|
+list:=MyList new.
+
+
+list add:-1.
+list add: -5.
+list add: 2.
+list add:3.
+list add:-3.
+list add: 12.
+
+expectedList:= MyList new.
+expectedList add:-1.
+expectedList add:-5.
+expectedList add:-3.
+
+self assert: (list select: [:each|each >0]) equals:expectedList.
+]
+
+{ #category : #testing }
 TestMyList >> testRemoveAt [
 |list|
 list:=MyList new.
@@ -168,6 +266,27 @@ self assert: list size equals: 5.
 list removeAt:2.
 
 self assert: list size equals: 4.
+]
+
+{ #category : #testing }
+TestMyList >> testSelect [
+|list expectedList|
+list:=MyList new.
+
+
+list add:-1.
+list add: -5.
+list add: 2.
+list add:3.
+list add:-3.
+list add: 12.
+
+expectedList:= MyList new.
+expectedList add:2.
+expectedList add:3.
+expectedList add:12.
+
+self assert: (list select: [:each|each >0]) equals:expectedList.
 ]
 
 { #category : #testing }
